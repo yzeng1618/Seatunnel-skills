@@ -1,275 +1,84 @@
-# LLM Context Guide for Apache SeaTunnel
+# Seatunnel-skills Agent Guide
 
-This guide helps AI assistants (LLMs / Agents) make **safe, consistent, and verifiable** changes to the Apache SeaTunnel codebase. It mirrors practices from mature Apache projects and adapts them to SeaTunnel’s **build, testing, architecture, and documentation conventions**.
+This `AGENTS.md` applies to the **yzeng1618/Seatunnel-skills** repository (skills/templates/scripts/docs), not the Apache SeaTunnel runtime codebase.
 
-## Skills（渐进式披露）
+## Scope
 
-本仓库提供一组可复用的 Skills（工作流/模板/参考资料），用于把“贡献开发指南 + Code Review + 质量门禁”标准化：
+- This repository stores reusable Skills, templates, references, validation scripts, and contribution docs.
+- If you are changing files in `skills/`, `scripts/`, `.github/`, or repo docs, follow this guide.
+- Do **not** treat `./mvnw ...` SeaTunnel build/test commands as required checks for this repository.
 
-- `skills/README.md`：Skill 索引入口与通用输出约定
-- `skills/seatunnel-code-review/`：按运行链路评审并输出可 merge 结论（要求 `path:line` 引用 + 严重程度）
-- `skills/seatunnel-post-dev-audit/`：开发完成后的质量门禁自检（spotless/verify/test + 文档双语 + 兼容性检查）
-- `skills/seatunnel-feature-design/`：功能设计/技术方案输出（含 mermaid 架构图与实现规划）
+## Required Local Verification
 
-修改/新增 skills 后，建议运行：
+After adding or modifying any skill, run:
 
 ```bash
 python scripts/validate_skills.py
+python scripts/generate_skills_index.py
+python scripts/validate_skills.py --check-index
 ```
 
-## ⚠️ CRITICAL: Validate Before Proposing Changes
-
-**Agents MUST run verification commands locally before suggesting or finalizing changes.**
+Optional transition mode for old skills without front-matter:
 
 ```bash
-# Format code (mandatory)
-./mvnw spotless:apply
-
-# Quick verification (mandatory)
-./mvnw -q -DskipTests verify
-
-# Unit tests (strongly recommended)
-./mvnw test
+python scripts/validate_skills.py --allow-legacy-no-frontmatter
 ```
 
-Failure to meet these requirements will likely result in PR rejection.
+## Skill Directory Contract
 
-## Git Commit Message Convention
-
-SeaTunnel follows a **strict commit message format** to maintain a clean and searchable history.
-
-**Format**:
-
-```
-[Type][Module] Description
-
-# Optional (recommended for connectors or fine-grained changes)
-[Type][Module][SubModule] Description
-```
-
-### Types
-
-* `Feature`  – New features
-* `Fix`      – Bug fixes
-* `Improve`  – Improvements to existing behavior
-* `Docs`     – Documentation-only changes
-* `Test`     – Test cases or test framework changes
-* `Chore`    – Build, dependency, or maintenance tasks
-* `Hotfix`   – Urgent fix (use sparingly)
-* `Bug` / `Bugfix` – Bug fix (prefer统一用 `Fix`)
-* `Refactor` – Refactor without behavior change
-
-### Modules
-
-* `Connector-V2`  – seatunnel-connectors-v2
-* `Zeta`          – seatunnel-engine (Zeta engine)
-* `Core`          – seatunnel-core
-* `API`           – seatunnel-api
-* `Common`        – seatunnel-common
-* `Config`        – seatunnel-config / config
-* `Transform-V2`  – seatunnel-transforms-v2
-* `Format`        – seatunnel-formats
-* `Translation`   – seatunnel-translation
-* `E2E`           – seatunnel-e2e
-* `CI`            – .github / seatunnel-ci-tools
-* `Dist`          – seatunnel-dist
-* `Shade`         – seatunnel-shade
-* `Plugin`        – seatunnel-plugin-discovery / plugins
-* `Tools`         – tools
-
-### Examples
-
-* `[Fix][Connector-V2] Fix MySQL source split enumeration bug`
-* `[Fix][Zeta] Fix checkpoint timeout under heavy backpressure`
-* `[Feature][Transform-V2] Add LLM transform plugin`
-* `[Improve][Core] Optimize jar package loading speed`
-* `[Docs] Update quick start guide`
-* `[Feature][JDBC][Oracle] Support TIMESTAMP_TZ read in Source`
-
-## Repository Structure
+Each skill must follow this structure:
 
 ```text
-seatunnel/
-├── seatunnel-api/              # Core API definitions
-├── seatunnel-common/           # Common utils & shared components
-├── seatunnel-config/           # Configuration module
-├── seatunnel-connectors-v2/    # Source & Sink connectors (main contribution area)
-├── seatunnel-transforms-v2/    # Transform plugins (including LLM)
-├── seatunnel-engine/           # Zeta engine & Web UI
-├── seatunnel-core/             # Job submission & CLI entry points
-├── seatunnel-dist/             # Distributions & packaging
-├── seatunnel-translation/      # Flink & Spark adapters
-├── seatunnel-formats/          # Data formats (JSON, Avro, etc.)
-├── seatunnel-plugin-discovery/ # SPI plugin discovery/loading
-├── seatunnel-shade/            # Shaded dependencies
-├── seatunnel-e2e/              # End-to-End integration tests
-├── seatunnel-examples/         # Local examples
-├── seatunnel-ci-tools/         # CI helper tools
-├── docs/                       # Documentation (en & zh)
-├── tools/                      # Build/dev tools
-└── config/                     # Default configurations
+skills/<skill-name>/
+  SKILL.md
+  agents/openai.yaml                 # optional but recommended
+  references/*.md                    # optional
+  templates/*.md                     # optional
+  examples/example_input.md          # required in this repo
+  examples/example_output.md         # required in this repo
 ```
 
-## Code Standards
+### `SKILL.md` front-matter (required)
 
-### Java Backend
+`SKILL.md` must start with YAML front-matter and include at least:
 
-* **Formatting**: Google Java Format (AOSP style), enforced by Spotless
-* **Imports**:
-    * No wildcard imports
-    * Use shaded dependencies: `org.apache.seatunnel.shade.*`
-* **Nullability**: Avoid implicit null assumptions
-* **Visibility**: Keep APIs minimal; prefer package-private when possible
-* **Comments**: Add comments for important methods (public APIs, complex logic).
+- `name` (must equal `<skill-name>` directory)
+- `description`
+- `when_to_use`
+- `inputs_required` (array)
+- `templates` (array, can be empty)
+- `references` (array, can be empty)
+- `agents` (array, can be empty)
+- `version` (optional)
 
-### Apache License Header (MANDATORY)
+All `templates`/`references`/`agents` entries must be **skill-relative file paths** that exist.
 
-All **new files** MUST include the ASF license header:
+## `DISABLED` Mechanism
 
-```java
-/*
- * Licensed to the Apache Software Foundation (ASF) under one or more
- * contributor license agreements.  See the NOTICE file distributed with
- * this work for additional information regarding copyright ownership.
- * The ASF licenses this file to You under the Apache License, Version 2.0
- * (the "License"); you may not use this file except in compliance with
- * the License.  You may obtain a copy of the License at
- *
- *    http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-```
+If a skill directory contains a file named `DISABLED`:
 
-## 🚨 Backward Compatibility (VERY IMPORTANT)
+- `scripts/validate_skills.py` skips validating that skill.
+- `scripts/generate_skills_index.py` excludes that skill from the generated index.
 
-Agents MUST treat backward compatibility as a **hard constraint**.
+Use this only for temporary deactivation; keep reason/context in PR description.
 
-* DO NOT remove or rename existing config options
-* DO NOT change default values casually
-* DO NOT break public APIs or SPI contracts
+## Auto-generated Skills Index
 
-Any incompatible change MUST:
+`skills/README.md` contains an auto-generated block between:
 
-* Be explicitly documented
-* Be documented in `docs/en/introduction/concepts/incompatible-changes.md`
-* Include migration guidance
-* Be clearly explained in the PR description
+- `<!-- AUTO-GENERATED:START -->`
+- `<!-- AUTO-GENERATED:END -->`
 
-## Dependency Rules
-
-* DO NOT introduce new dependencies unless absolutely necessary
-* Prefer existing shaded dependencies under `org.apache.seatunnel.shade.*`
-* Any new dependency MUST:
-    * Be justified in the PR description
-    * Consider shading, size, and conflict risks
-
-## Architecture Guidelines
-
-### Connector (V2)
-
-* Implement `SeaTunnelSource` or `SeaTunnelSink`
-* Define configs using `Option`
-* Support parallelism via `SourceSplitEnumerator`
-* Avoid connector-specific logic leaking into engine or core
-
-### Zeta Engine
-
-* **Client**: Submits job config
-* **Master**: Schedules & coordinates
-* **Worker**: Executes tasks (Source → Transform → Sink)
-
-Respect task boundaries and lifecycle semantics.
-
-## Configuration (Option) Rules
-
-* All user-facing configs MUST be defined using `Option`
-* Each option MUST include:
-    * name
-    * type
-    * default value (if applicable)
-    * clear description
-* Option names are **stable contracts** and must not be renamed lightly
-
-## Error Handling & Logging
-
-* Exceptions MUST include sufficient context (table, task, config key)
-* Avoid swallowing exceptions
-* Use proper log levels:
-    * INFO  – lifecycle events
-    * WARN  – recoverable issues
-    * ERROR – task-failing errors
-* NEVER log sensitive information (passwords, tokens, credentials)
-
-## Documentation Rules
-
-* Any user-visible change MUST update:
-
-    * `docs/en`
-    * `docs/zh`
-* Config names, defaults, and examples MUST match the code exactly
-* Documentation is part of the feature, not an afterthought
-
-## Testing Guidelines
-
-### Unit Tests
-
-* Located under `src/test/java`
-* Validate behavior, not implementation details
-* Prefer deterministic and minimal tests
-
-Command:
+Do not hand-edit this block. Regenerate with:
 
 ```bash
-./mvnw test
+python scripts/generate_skills_index.py
 ```
 
-### E2E Tests
+## SeaTunnel Upstream Reference
 
-* Located in `seatunnel-e2e`
-* Uses Testcontainers
-* Extend `TestSuiteBase`
+When you are working on the **Apache SeaTunnel main codebase** (not this skills repo), use:
 
-Command:
+- `docs/upstream/AGENTS_SEATUNNEL_CODEBASE.md`
 
-```bash
-./mvnw -DskipUT -DskipIT=false verify
-```
-
-## Performance Awareness
-
-Agents MUST consider performance implications:
-
-* Avoid unnecessary object creation in hot paths
-* Be cautious with large in-memory buffers
-* Consider parallelism and resource usage
-
-## PR Scope Rule
-
-* Keep changes minimal and focused
-* Avoid unrelated refactors or formatting-only changes
-* One PR should solve **one problem**
-
-## Running & Debugging
-
-### Build from Source
-
-```bash
-./mvnw clean install -DskipTests -Dskip.spotless=true
-```
-
-### Install Connectors
-
-```bash
-sh bin/install-plugin.sh $current_version
-```
-
-### Run Job (Zeta)
-
-```bash
-sh bin/seatunnel.sh --config config/v2.batch.config.template -e local
-```
+That document keeps the original SeaTunnel-specific contribution/checklist guidance for reference.

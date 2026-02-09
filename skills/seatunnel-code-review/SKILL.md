@@ -1,6 +1,20 @@
 ---
 name: seatunnel-code-review
-description: 基于 Apache SeaTunnel 运行链路进行代码评审（PR/diff/review）。当需要审查 SeaTunnel 变更、评估兼容性/性能副作用/错误处理/测试与文档/架构合理性，并输出带 path:line 引用的问题清单与是否可合并结论时使用。
+description: 基于 Apache SeaTunnel 运行链路进行代码评审（PR/diff/review），输出带 path:line 的问题清单、严重程度和可合并结论。
+when_to_use: 当用户需要审查 SeaTunnel 变更（兼容性、性能副作用、错误处理、测试与文档）并给出 merge 建议时使用。
+inputs_required:
+  - 评审对象（PR 链接、diff 或文件列表）
+  - 变更背景与目标（修复/功能/重构）
+  - 关注重点（兼容性、性能、稳定性等）
+templates:
+  - templates/REVIEW_REPORT.md
+references:
+  - references/RUNTIME_FLOW.md
+  - references/REVIEW_CHECKLIST.md
+  - references/MODULE_BOUNDARIES.md
+agents:
+  - agents/openai.yaml
+version: "1.0.0"
 ---
 
 <!--
@@ -22,7 +36,7 @@ limitations under the License.
 
 # 目标
 
-- 基于 SeaTunnel 的“配置 → 插件加载 → 引擎调度 → Source/Transform/Sink 执行 → Checkpoint/Commit”链路做系统性评审。
+- 基于 SeaTunnel 的“配置 -> 插件加载 -> 引擎调度 -> Source/Transform/Sink 执行 -> Checkpoint/Commit”链路做系统性评审。
 - 对每个发现的问题给出可操作的改进建议，并给出最终 merge 结论。
 
 # 工作流（按顺序执行）
@@ -51,3 +65,7 @@ limitations under the License.
 - 不输出敏感信息（密码、token、连接串等）；评审时也要检查日志是否可能泄露敏感信息。
 - 避免“泛泛而谈”；必须把建议落到具体位置（`path:line`）与可执行动作。
 
+## Examples
+
+- 输入示例：`examples/example_input.md`
+- 输出示例：`examples/example_output.md`

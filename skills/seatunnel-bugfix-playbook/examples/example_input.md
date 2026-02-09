@@ -15,11 +15,11 @@ See the License for the specific language governing permissions and
 limitations under the License.
 -->
 
-# Docs
+# 示例输入
 
-本目录放“入口/索引文档”，避免与 `skills/**/references` 重复维护。
+请使用 `$seatunnel-bugfix-playbook` 帮我输出修复报告：
 
-- 架构与运行链路：`docs/developer/architecture/RUNTIME_FLOW.md`
-- Review 与自检入口：`docs/developer/review/CODE_REVIEW_TEMPLATE.md`
-- SeaTunnel 主仓库 Agent 参考指南：`docs/upstream/AGENTS_SEATUNNEL_CODEBASE.md`
-- 变更挖掘与洞察输出（可选）：`docs/insights/README.md`
+- 现象：MySQL source 在 streaming 模式下偶发重复消费。
+- 变更：`seatunnel-connectors-v2/connector-jdbc/.../MysqlSourceReader.java`
+- 期望：checkpoint 恢复后不重复提交已处理 offset。
+- 已知失败日志：`duplicate primary key on sink`。

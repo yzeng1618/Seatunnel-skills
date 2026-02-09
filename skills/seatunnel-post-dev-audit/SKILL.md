@@ -1,6 +1,18 @@
 ---
 name: seatunnel-post-dev-audit
-description: 开发完成后的 SeaTunnel 规范性与质量门禁自检（spotless/verify/test、兼容性、文档双语、依赖与日志脱敏）。当准备提交或合并 PR、需要输出自检报告与是否可合并结论时使用。
+description: 开发完成后的 SeaTunnel 规范性与质量门禁自检（spotless/verify/test、兼容性、文档双语、依赖与日志脱敏）。
+when_to_use: 当用户准备提交或合并 SeaTunnel PR，需要输出可复用的自检报告和 merge readiness 结论时使用。
+inputs_required:
+  - 变更说明与影响模块
+  - 本地验证命令执行结果（spotless/verify/test/e2e）
+  - 文档与兼容性变更信息（docs/en、docs/zh、Option/API/SPI）
+templates:
+  - templates/POST_DEV_AUDIT_REPORT.md
+references:
+  - references/VERIFY_COMMANDS.md
+agents:
+  - agents/openai.yaml
+version: "1.0.0"
 ---
 
 <!--
@@ -44,3 +56,7 @@ limitations under the License.
    - 使用 `templates/POST_DEV_AUDIT_REPORT.md` 输出结果。
    - 给出“是否可合并结论”与剩余风险/待办。
 
+## Examples
+
+- 输入示例：`examples/example_input.md`
+- 输出示例：`examples/example_output.md`

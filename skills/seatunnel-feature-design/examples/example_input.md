@@ -15,11 +15,10 @@ See the License for the specific language governing permissions and
 limitations under the License.
 -->
 
-# Docs
+# 示例输入
 
-本目录放“入口/索引文档”，避免与 `skills/**/references` 重复维护。
+请使用 `$seatunnel-feature-design` 输出一个“增量快照 Source”设计方案：
 
-- 架构与运行链路：`docs/developer/architecture/RUNTIME_FLOW.md`
-- Review 与自检入口：`docs/developer/review/CODE_REVIEW_TEMPLATE.md`
-- SeaTunnel 主仓库 Agent 参考指南：`docs/upstream/AGENTS_SEATUNNEL_CODEBASE.md`
-- 变更挖掘与洞察输出（可选）：`docs/insights/README.md`
+- 模块：Connector-V2 + Zeta
+- 要求：给 mermaid 架构图、分阶段实现计划
+- 约束：不能改现有 Option 名称

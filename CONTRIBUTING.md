@@ -17,63 +17,90 @@ limitations under the License.
 
 # 贡献指南（Seatunnel-skills）
 
-本仓库用于维护面向 **Apache SeaTunnel** 的 Agent Skills、评审模板与参考资料，目标是让贡献与 Code Review 更一致、更可验证。
+本仓库用于维护面向 **Apache SeaTunnel** 的 Agent Skills、模板和参考资料。
 
-## 1. 新增/更新 Skill
-
-### 1.1 目录约定
-
-每个 skill 必须是一个独立目录：
+## 1. 新增/修改 Skill 的目录约定
 
 ```text
 skills/<skill-name>/
-  SKILL.md                 # 必须：YAML frontmatter + 工作流正文
-  agents/openai.yaml       # 推荐：UI 元数据（display_name/short_description/default_prompt）
-  references/*.md          # 可选：按需加载的参考资料
-  templates/*.md           # 可选：产出模板（报告/清单）
+  SKILL.md
+  agents/openai.yaml                 # 可选但推荐
+  references/*.md                    # 可选
+  templates/*.md                     # 可选
+  examples/example_input.md          # 必须
+  examples/example_output.md         # 必须
 ```
 
-### 1.2 SKILL.md 规范（强约束）
+## 2. SKILL.md front-matter 规范（必填）
 
-- 文件第一行必须是 `---`，且包含 YAML frontmatter。
-- frontmatter 只保留 `name` 与 `description`（建议）。
-- `name` 必须是 hyphen-case（小写字母/数字/短横线），例如 `seatunnel-code-review`。
-- `description` 请覆盖“何时使用”的触发词（如：code review / PR / diff / 评审 / 自检）。
+`SKILL.md` 第一段必须是 YAML front-matter，字段如下：
 
-> 注意：为兼容 frontmatter 解析，ASF License Header 请放在 frontmatter **之后**（用 HTML 注释）。
+- `name`：必须，且与目录名一致
+- `description`：必须，一行摘要
+- `when_to_use`：必须，触发条件
+- `inputs_required`：必须，数组
+- `templates`：必须，数组（可空）
+- `references`：必须，数组（可空）
+- `agents`：必须，数组（可空）
+- `version`：可选
 
-### 1.3 agents/openai.yaml（可选但推荐）
+示例：
 
-- 仅保留 `display_name`、`short_description`、`default_prompt` 即可。
-- 约束：字符串值必须加引号；`default_prompt` 必须显式包含 `$skill-name`。
+```yaml
+---
+name: seatunnel-code-review
+description: 基于 Apache SeaTunnel 运行链路进行代码评审。
+when_to_use: 当需要对 SeaTunnel PR/diff 输出结构化评审结论时使用。
+inputs_required:
+  - PR 链接或 diff
+  - 变更背景
+templates:
+  - templates/REVIEW_REPORT.md
+references:
+  - references/RUNTIME_FLOW.md
+agents:
+  - agents/openai.yaml
+version: "1.0.0"
+---
+```
 
-## 2. 新文件 License Header（必须）
+约束：
 
-本仓库新增文件必须包含 ASF License Header：
+- `templates` / `references` / `agents` 必须是 skill 目录内的相对文件路径。
+- `name` 必须是 hyphen-case，且和目录名一致。
 
-- Markdown：使用 HTML 注释 `<!-- ... -->`。
-- YAML / gitignore：使用 `#` 注释。
-- 对于 `SKILL.md`：把 License Header 放在 YAML frontmatter 后，以免破坏解析。
+## 3. DISABLED 机制
 
-## 3. 本地校验（推荐）
+若 skill 目录存在 `DISABLED` 文件：
 
-修改/新增 skill 后，建议运行：
+- `python scripts/validate_skills.py` 会跳过该 skill；
+- `python scripts/generate_skills_index.py` 不会把该 skill 写入索引。
+
+用于临时下线，不建议长期保留。
+
+## 4. 本地校验与索引更新（必跑）
 
 ```bash
 python scripts/validate_skills.py
+python scripts/generate_skills_index.py
+python scripts/validate_skills.py --check-index
 ```
 
-### 3.1 禁用 Skill（不建议，但可用）
+可选：一次性检查并修复 README 索引漂移：
 
-如果某个 skill 需要下线但暂时无法删除，可在 skill 目录下新增 `DISABLED` 文件；`scripts/validate_skills.py` 会跳过该目录。
+```bash
+python scripts/validate_skills.py --check-index --fix-index
+```
 
-## 4.（可选）准备上游 SeaTunnel 用于本地分析
+兼容旧格式（无 front-matter）仅用于过渡：
 
-如需做功能设计“查重”或对齐近期变更热点，可在本地工作区准备一份上游 SeaTunnel 源码（例如位于本项目根目录的 `seatunnel/` 或 `external/seatunnel/`）。
+```bash
+python scripts/validate_skills.py --allow-legacy-no-frontmatter
+```
 
-说明：`external/README.md`
+## 5. PR 模板
 
-## 5. 提交/Review 建议
+- 本仓库改动：`.github/PULL_REQUEST_TEMPLATE/skill_repo_change.md`
+- SeaTunnel 上游参考模板：`.github/PULL_REQUEST_TEMPLATE/seatunnel_upstream_change.md`
 
-- PR 尽量小而聚焦（一个 PR 解决一个问题）。
-- 模板与清单类变更：请在 PR 描述里说明“新增/修改点”和“预期对贡献者的影响”。
+默认模板 `.github/pull_request_template.md` 面向本仓库提交。

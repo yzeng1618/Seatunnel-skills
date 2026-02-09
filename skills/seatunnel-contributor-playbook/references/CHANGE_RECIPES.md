@@ -87,6 +87,7 @@ limitations under the License.
 
 - 复现步骤（配置 + 数据 + 环境）与预期/实际行为。
 - 根因归类：资源泄露、重试语义、并发竞态、序列化/状态升级、checkpoint 语义等。
+- 需要结构化 bug 修复报告时，优先使用 `$seatunnel-bugfix-playbook` 输出专项结论（复现、根因、风险、回归）。
 
 ### 2) 修复策略
 

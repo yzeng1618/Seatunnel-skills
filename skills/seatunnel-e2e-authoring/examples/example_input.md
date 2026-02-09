@@ -15,11 +15,10 @@ See the License for the specific language governing permissions and
 limitations under the License.
 -->
 
-# Docs
+# 示例输入
 
-本目录放“入口/索引文档”，避免与 `skills/**/references` 重复维护。
+请用 `$seatunnel-e2e-authoring` 帮我设计一个 Kafka -> JDBC 的 E2E：
 
-- 架构与运行链路：`docs/developer/architecture/RUNTIME_FLOW.md`
-- Review 与自检入口：`docs/developer/review/CODE_REVIEW_TEMPLATE.md`
-- SeaTunnel 主仓库 Agent 参考指南：`docs/upstream/AGENTS_SEATUNNEL_CODEBASE.md`
-- 变更挖掘与洞察输出（可选）：`docs/insights/README.md`
+- 目标：验证 failover 后不会重复写入
+- 现状：已有 E2E，缺少异常路径和 UT
+- 约束：CI 10 分钟内跑完

@@ -15,11 +15,10 @@ See the License for the specific language governing permissions and
 limitations under the License.
 -->
 
-# Docs
+# 示例输入
 
-本目录放“入口/索引文档”，避免与 `skills/**/references` 重复维护。
+请使用 `$seatunnel-contributor-playbook` 生成行动计划：
 
-- 架构与运行链路：`docs/developer/architecture/RUNTIME_FLOW.md`
-- Review 与自检入口：`docs/developer/review/CODE_REVIEW_TEMPLATE.md`
-- SeaTunnel 主仓库 Agent 参考指南：`docs/upstream/AGENTS_SEATUNNEL_CODEBASE.md`
-- 变更挖掘与洞察输出（可选）：`docs/insights/README.md`
+- 场景：新增 Source Connector（MongoDB）
+- 约束：保持 Option 向后兼容，不新增重依赖
+- 目标：两周内完成 code + docs + e2e

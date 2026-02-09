@@ -1,6 +1,21 @@
 ---
 name: seatunnel-contributor-playbook
-description: Apache SeaTunnel 贡献者通用 Playbook（新增 source/sink、新增配置参数、修复 bug）。当需要一份通用、可执行的贡献流程与检查清单，并能结合 code review 与质量门禁 skills 给出行动计划时使用。
+description: Apache SeaTunnel 贡献者通用 Playbook（新增 source/sink、参数变更、bugfix），用于生成可执行行动计划与检查清单。
+when_to_use: 当用户需要一份通用、可执行的 SeaTunnel 贡献计划，并联动 code review/质量门禁 skill 时使用。
+inputs_required:
+  - 目标变更类型（新增 connector/参数/bugfix/docs/e2e）
+  - 受影响模块与运行模式
+  - 已知约束（兼容性、性能、发布窗口）
+templates:
+  - templates/CONTRIBUTION_PLAN.md
+references:
+  - references/CHANGE_RECIPES.md
+  - references/MODULE_NORMS.md
+  - references/CONNECTOR_INTEGRATION_CHECKLIST.md
+  - references/DOCS_FORMAT_SPEC.md
+agents:
+  - agents/openai.yaml
+version: "1.0.0"
 ---
 
 <!--
@@ -36,6 +51,7 @@ limitations under the License.
 - 输出时建议使用模板：`templates/CONTRIBUTION_PLAN.md`（更适合写到 PR 描述/设计文档里）。
 - 参考上游 SeaTunnel 的“已有实现与近期变更热点”（例如：Connector-V2 / Docs / E2E / Zeta）对齐实现与文档风格，并把结论反哺到 `references/CHANGE_RECIPES.md`（保持通用，不粘具体 PR）。
 - 开发完成后建议配合：
+  - `$seatunnel-bugfix-playbook` 做 Bug 修复专项报告（最小复现 + 根因证据 + 回归结论）
   - `$seatunnel-post-dev-audit` 做质量门禁
   - `$seatunnel-code-review` 做结构化评审输出
 
@@ -44,3 +60,8 @@ limitations under the License.
 - `references/MODULE_NORMS.md`：按模块的高频风险与规范（基于近一年变更热点）
 - `references/CONNECTOR_INTEGRATION_CHECKLIST.md`：新增 connector 的集成检查清单
 - `references/DOCS_FORMAT_SPEC.md`：文档格式与一致性规范（含 admonitions）
+
+## Examples
+
+- 输入示例：`examples/example_input.md`
+- 输出示例：`examples/example_output.md`

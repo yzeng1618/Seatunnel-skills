@@ -15,11 +15,10 @@ See the License for the specific language governing permissions and
 limitations under the License.
 -->
 
-# Docs
+# 示例输入
 
-本目录放“入口/索引文档”，避免与 `skills/**/references` 重复维护。
+请使用 `$seatunnel-post-dev-audit` 评估这个 PR 是否可合并：
 
-- 架构与运行链路：`docs/developer/architecture/RUNTIME_FLOW.md`
-- Review 与自检入口：`docs/developer/review/CODE_REVIEW_TEMPLATE.md`
-- SeaTunnel 主仓库 Agent 参考指南：`docs/upstream/AGENTS_SEATUNNEL_CODEBASE.md`
-- 变更挖掘与洞察输出（可选）：`docs/insights/README.md`
+- 改动：新增 Elasticsearch sink 参数并优化重试逻辑
+- 已执行命令：spotless/verify 通过，test 有 1 个失败
+- 需要：给出阻塞项和 merge 结论

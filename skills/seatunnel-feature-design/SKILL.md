@@ -1,6 +1,18 @@
 ---
 name: seatunnel-feature-design
-description: Apache SeaTunnel 功能设计/技术方案输出（feature design/spec/设计文档）。当需要先扫描 Seatunnel 现有模块判断是否已有实现、调研主流方案、选择简单稳定的实现路径、输出实现规划与 mermaid 架构图，并给出方案优缺点与风险评估时使用。
+description: Apache SeaTunnel 功能设计/技术方案输出（feature design/spec），覆盖现状扫描、方案对比、mermaid 架构图和实现规划。
+when_to_use: 当用户需要先扫描 SeaTunnel 现有实现，再输出可落地的设计方案、实现计划与风险评估时使用。
+inputs_required:
+  - 问题陈述与目标/非目标
+  - 影响模块或功能范围
+  - 约束条件（兼容性、性能、上线节奏）
+templates:
+  - templates/FEATURE_DESIGN_DOC.md
+references:
+  - references/DESIGN_CHECKLIST.md
+agents:
+  - agents/openai.yaml
+version: "1.0.0"
 ---
 
 <!--
@@ -57,3 +69,8 @@ limitations under the License.
 
 - 必须显式讨论：向后兼容（Option/API/SPI）、性能副作用、失败恢复语义（尤其 streaming checkpoint）。
 - 不确定的结论必须标注“待验证”，并给出最小验证方法（命令/用例/指标）。
+
+## Examples
+
+- 输入示例：`examples/example_input.md`
+- 输出示例：`examples/example_output.md`

@@ -15,11 +15,10 @@ See the License for the specific language governing permissions and
 limitations under the License.
 -->
 
-# Docs
+# 示例输入
 
-本目录放“入口/索引文档”，避免与 `skills/**/references` 重复维护。
+使用 `$seatunnel-connector-v2-dev` 评审这个新 sink connector 设计：
 
-- 架构与运行链路：`docs/developer/architecture/RUNTIME_FLOW.md`
-- Review 与自检入口：`docs/developer/review/CODE_REVIEW_TEMPLATE.md`
-- SeaTunnel 主仓库 Agent 参考指南：`docs/upstream/AGENTS_SEATUNNEL_CODEBASE.md`
-- 变更挖掘与洞察输出（可选）：`docs/insights/README.md`
+- 目标：新增 Redis sink
+- 变更：`RedisSink.java`、`RedisSinkWriter.java`、`RedisConfig.java`
+- 要求：幂等写入、checkpoint 对齐、docs/en+zh、UT+E2E

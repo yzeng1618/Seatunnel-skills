@@ -15,11 +15,12 @@ See the License for the specific language governing permissions and
 limitations under the License.
 -->
 
-# Docs
+# 示例输入
 
-本目录放“入口/索引文档”，避免与 `skills/**/references` 重复维护。
+使用 `$seatunnel-code-review` 评审下面改动并给出可 merge 结论：
 
-- 架构与运行链路：`docs/developer/architecture/RUNTIME_FLOW.md`
-- Review 与自检入口：`docs/developer/review/CODE_REVIEW_TEMPLATE.md`
-- SeaTunnel 主仓库 Agent 参考指南：`docs/upstream/AGENTS_SEATUNNEL_CODEBASE.md`
-- 变更挖掘与洞察输出（可选）：`docs/insights/README.md`
+- PR：修复 Kafka sink 提交延迟问题
+- diff 涉及：
+  - `seatunnel-connectors-v2/connector-kafka/.../KafkaSinkWriter.java`
+  - `seatunnel-connectors-v2/connector-kafka/.../KafkaCommitter.java`
+- 关注点：checkpoint 一致性、异常处理、性能副作用
